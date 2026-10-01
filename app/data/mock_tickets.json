@@ -1,0 +1,54 @@
+[
+  {
+    "id": "TCK-1001",
+    "customer_name": "Sarah Jenkins",
+    "customer_id": "CUST-9921",
+    "ticket_text": "My payment was deducted but my order was cancelled immediately.",
+    "category": "Payment",
+    "subcategory": "Payment Deducted",
+    "priority": "High",
+    "sentiment": "Negative",
+    "intent": "Payment Failure",
+    "status": "New",
+    "created_at": "10 mins ago"
+  },
+  {
+    "id": "TCK-1002",
+    "customer_name": "Alex Rivera",
+    "customer_id": "CUST-4410",
+    "ticket_text": "I have been waiting for my refund for 15 days. This is extremely frustrating!",
+    "category": "Refund",
+    "subcategory": "Refund Delay",
+    "priority": "High",
+    "sentiment": "Negative",
+    "intent": "Refund",
+    "status": "Escalated",
+    "created_at": "25 mins ago"
+  },
+  {
+    "id": "TCK-1003",
+    "customer_name": "David Chen",
+    "customer_id": "CUST-7712",
+    "ticket_text": "Can you check order #12345? When will it arrive at my address?",
+    "category": "Order",
+    "subcategory": "Delivery Status",
+    "priority": "Medium",
+    "sentiment": "Neutral",
+    "intent": "Delivery Delay",
+    "status": "In Progress",
+    "created_at": "1 hour ago"
+  },
+  {
+    "id": "TCK-1004",
+    "customer_name": "Emily Watson",
+    "customer_id": "CUST-3319",
+    "ticket_text": "I forgot my password and the reset link is giving a 404 error.",
+    "category": "Technical Issue",
+    "subcategory": "Password Reset",
+    "priority": "Medium",
+    "sentiment": "Neutral",
+    "intent": "Password Reset",
+    "status": "New",
+    "created_at": "2 hours ago"
+  }
+]
