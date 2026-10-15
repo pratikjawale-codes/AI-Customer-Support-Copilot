@@ -52,7 +52,7 @@ class ObservabilityTracker:
                 "completion_tokens": completion_tokens,
                 "total_tokens": prompt_tokens + completion_tokens,
                 "cost_usd": self.calculate_cost(prompt_tokens, completion_tokens),
-                "provider_mode": "LIVE_OPENAI" if settings.is_live_openai_available() else "HEURISTIC_LOCAL"
+                "provider_mode": settings.active_provider_mode()
             })
             self.logs[:] = self.logs[-100:]
 
@@ -71,7 +71,7 @@ class ObservabilityTracker:
                 "completion_tokens": self.completion_tokens,
                 "total_estimated_cost_usd": self.calculate_cost(self.prompt_tokens, self.completion_tokens),
                 "feedback_breakdown": dict(self.feedback_counts),
-                "provider_mode": "LIVE_OPENAI" if settings.is_live_openai_available() else "HEURISTIC_LOCAL",
+                "provider_mode": settings.active_provider_mode(),
                 "recent_request_logs": list(self.logs[-10:])
             }
 

@@ -3,6 +3,8 @@ name = "virtual-assistant-customer-support"
 version = "1.0.0"
 description = "Virtual Assistant Customer Support with ticket triage and RAG"
 readme = "README.md"
+license = "MIT"
+authors = [{ name = "Pratik Jawale" }]
 requires-python = ">=3.10"
 dependencies = [
     "fastapi>=0.110.0",

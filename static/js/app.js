@@ -35,6 +35,9 @@ function switchTab(tabId, button) {
   if (tabId === 'observability') {
     fetchObservabilityStats();
   }
+  if (tabId === 'evaluation') {
+    fetchEvaluationMetrics();
+  }
 }
 
 // Check Health & Engine Mode
@@ -48,9 +51,12 @@ async function checkEngineHealth() {
     if (data.mode === 'LIVE_OPENAI') {
       badge.className = "flex items-center space-x-2 px-3 py-1.5 rounded-full bg-emerald-950 border border-emerald-800 text-xs text-emerald-300";
       text.innerText = "Live OpenAI Mode (API Keys Active)";
+    } else if (data.mode === 'KILL_SWITCH_ENGAGED') {
+      badge.className = "flex items-center space-x-2 px-3 py-1.5 rounded-full bg-amber-950 border border-amber-800 text-xs text-amber-300";
+      text.innerText = "Local Mode (Kill Switch Active)";
     } else {
       badge.className = "flex items-center space-x-2 px-3 py-1.5 rounded-full bg-amber-950 border border-amber-800 text-xs text-amber-300";
-      text.innerText = "Simulated Local Mode (API Keys Empty)";
+      text.innerText = "Local Heuristic Mode (OpenAI API Unavailable)";
     }
   } catch (err) {
     console.error("Health check failed", err);
@@ -246,20 +252,6 @@ async function submitHITL(action) {
     const statusText = document.getElementById('hitl-status-text');
     statusText.innerText = res.message;
     statusBox.classList.remove('hidden');
-
-    // Also record feedback
-    fetch('/api/feedback', {
-      method: 'POST',
-      headers: {'Content-Type': 'application/json'},
-      body: JSON.stringify({
-        ticket_id: activeTicket ? activeTicket.id : 'TCK-1001',
-        question: activeTicket ? activeTicket.ticket_text : '',
-        retrieved_context: currentContextDocs,
-        ai_response: currentResponses[currentStyle] || '',
-        agent_edited_response: editorText,
-        rating: action === 'approved' ? 'helpful' : 'not_helpful'
-      })
-    });
 
   } catch (err) {
     console.error("HITL submission error", err);
@@ -543,4 +535,23 @@ function createNewTicketModal() {
   };
   ticketQueue.unshift(ticket);
   renderTicketQueue();
+}
+
+async function fetchEvaluationMetrics() {
+  try {
+    const res = await fetch('/api/evaluation/metrics');
+    if (!res.ok) return;
+    const data = await res.json();
+    const m = data.metrics || {};
+    if (document.getElementById('eval-faithfulness')) {
+      document.getElementById('eval-faithfulness').innerText = `${(m.faithfulness * 100).toFixed(1)}%`;
+      document.getElementById('eval-relevancy').innerText = `${(m.answer_relevancy * 100).toFixed(1)}%`;
+      document.getElementById('eval-tool-acc').innerText = `${(m.tool_call_accuracy * 100).toFixed(1)}%`;
+      document.getElementById('eval-recall').innerText = `${(m.retrieval_recall_at_5 * 100).toFixed(1)}%`;
+      document.getElementById('eval-hitrate').innerText = `${(m.retrieval_hit_rate_at_5 * 100).toFixed(1)}%`;
+      document.getElementById('eval-mrr').innerText = `${m.retrieval_mrr}`;
+    }
+  } catch (err) {
+    console.error("Evaluation metrics fetch failed", err);
+  }
 }
